@@ -20,3 +20,15 @@ To get started developing right away:
 ## API Server
 
 Information about the API server and how to use it can be found in its [README file](api-server/README.md).
+## Running the Project
+
+* One Terminal, Run API Server
+   - `cd api-server`
+   - `npm install`
+   - `node server`
+
+* Terminal 2,
+  - cd frontend
+  - npm install
+  - npm start
+  
