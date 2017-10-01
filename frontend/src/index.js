@@ -1,21 +1,19 @@
+import thunkMiddleware from 'redux-thunk'
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './components/App';
 import registerServiceWorker from './registerServiceWorker';
+
+import { createLogger } from 'redux-logger'
 import { createStore, applyMiddleware, compose } from 'redux'
+
+import { fetchCategories } from './actions/actions'
+import reducer from './reducers'
 import {Provider} from 'react-redux'
 
-import reducer from './reducers'
+const loggerMiddleware = createLogger()
 
-const logger = store => next => action => {
-  console.group(action.type)
-  console.info('dispatching', action)
-  let result = next(action)
-  console.log('next state', store.getState())
-  console.groupEnd(action.type)
-  return result
-}
 
 const composeEnhancers =  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
@@ -23,8 +21,11 @@ const composeEnhancers =  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
 const store = createStore(
   reducer,
-  composeEnhancers(applyMiddleware(logger))
+  composeEnhancers(applyMiddleware(thunkMiddleware, loggerMiddleware))
  )
+
+
+ store.dispatch(fetchCategories())
 
 ReactDOM.render(
   <Provider store={store}>
