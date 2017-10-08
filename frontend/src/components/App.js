@@ -1,48 +1,45 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
+import { withRouter, Route, Link } from 'react-router-dom'
 import logo from '../logo.svg';
 import '../App.css';
-import CategoryList from './CategoryList'
+import Categories from './Categories'
+import PostCommentList from './PostCommentList'
 
 class App extends Component {
 
-  state = {
-    categoryPathFilter: null,
-  }
+
 
   render() {
-    const { categories } = this.props
     console.log('render-props', this.props)
-    let categoriesView = categories.filter(
-      category => (this.state.categoryPathFilter == null) ||
-      category.path == this.state.categoryPathFilter
-    )
-    return (
 
+    const categories = 
+    [
+      {  name: 'react', path: 'react'},
+      {  name: 'redux', path: 'redux'},
+      {  name: 'udacity', path: 'udacity'},            
+    ]
+    return (
       <div className='container'>
         <div className='nav'>
           <h1 className='header'>Project - Readable</h1>
           <ul className='category-types'>
+          <li key='h' className='subheader'>
+                <Link to='/' >Home</Link>
+          </li>
           {
-            categoriesView.map((categoryType) => (
+            categories.map((categoryType) => (
               <li key={categoryType.name} className='subheader'>
-                {categoryType.name}
+                <Link to={`/${categoryType.path}`} >{categoryType.name}</Link>
               </li>
             ))
           }
           </ul>
         </div>
-        <div className='categories'>
-          <ul className='category-types'>
-            {
-              categoriesView.map((categoryType) => (
-                <li key={categoryType.name} className='subheader'>
-                  <CategoryList categoryPath={categoryType.path} />
-                </li>
-              ))
-            }
-            </ul>          
-        </div>
+        <Route exact path="/" component={Categories} />
+ 
+        <Route exact path="/:category" component={Categories} />
+        <Route exact path="/category/:category/post/:post" component={PostCommentList} />        
       </div>
     );
   }
@@ -56,9 +53,10 @@ function mapStateToProps({ category, post } ) {
   }
 }
 
-
 function mapDispatchToProps(dispatch) {
   return {
   }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+
+export default App
+// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App))

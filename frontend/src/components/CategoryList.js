@@ -10,16 +10,27 @@ function trim (str) {
 }
 
 class CategoryList extends Component {
+  state = {
+    categoryPath: "",
+  }
+
   componentDidMount() {
-    console.log('componentDidMount', this.props)
     this.props.fetchPosts(this.props.categoryPath)
   }
+
+  componentWillReceiveProps(nextProps) {
+    console.log('CategoryList-componentWillReceiveProps')
+     this.setState({
+        categoryPath: this.props.categoryPath
+    });
+  }  
 
   render() {
     const { category, categoryPath } = this.props
     console.log('CategoryList-render', this.props)
+    // this.props.fetchPosts(this.props.categoryPath)
     return (
-      <div>
+      <div className="category-entry-info">
       <h3 className='subheader'>{category.categoriesMap[categoryPath].name}</h3>
       <div>
         <PostList categoryPath={categoryPath} />

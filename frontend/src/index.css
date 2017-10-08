@@ -3,3 +3,44 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+ul {
+  padding-left: 0;
+}
+
+li {
+  list-style-type: none;
+}
+
+.category-types {
+  display: flex;
+  justify-content: space-around;
+  margin: 0;
+  margin-left: 0px;
+}
+
+.post-entries {
+  display: flex;
+  justify-content: space-around;
+  margin: 0;
+  margin-left: 10px;
+}
+
+.post-entry {
+  display: flex;
+  justify-content: space-around;
+  margin: 0;
+  margin-left: 40px;
+}
+
+.post-entry-column {
+  display: flex;
+  flex: 1 1;
+  flex-direction: column;
+}
+
+.post-grid {
+  display: flex;
+  flex: 1 1;
+  flex-direction: column;
+}

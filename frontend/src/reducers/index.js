@@ -5,6 +5,8 @@ import {
   RECEIVE_CATEGORIES,
   REQUEST_POSTS,
   RECEIVE_POSTS,
+  REQUEST_POST_COMMENTS,
+  RECEIVE_POST_COMMENTS,  
 } from '../actions/actions'
 
 const categoriesList = [
@@ -48,24 +50,36 @@ function category(state = initialCategoriesState, action) {
 function post(state = {}, action) {
   switch(action.type) {
     case REQUEST_POSTS:
-    return state
-  case RECEIVE_POSTS:
-    console.log('reducer-post' + action.type, action)
-    const nextState = {
-      ...state,
-      [action.category]: {
-        posts: action.posts
+      return state
+    case RECEIVE_POSTS:
+      console.log('reducer-post' + action.type, action)
+      const nextState = {
+        ...state,
+        [action.category]: {
+          posts: action.posts
+        }
       }
-    }
-    console.log('nextState', action.type, nextState)
-    return nextState    
+      console.log('nextState', action.type, nextState)
+      return nextState    
     default:
       return state
   }
 }
 
 function comment(state = {}, action) {
-  switch( action.type) {
+  switch(action.type) {
+    case REQUEST_POST_COMMENTS:
+      return state
+    case RECEIVE_POST_COMMENTS:
+      console.log('reducer-post' + action.type, action)
+      const nextState = {
+        ...state,
+        [action.postId]: {
+          comments: action.posts
+        }
+      }
+      console.log('nextState', action.type, nextState)
+      return nextState    
     default:
       return state
   }
