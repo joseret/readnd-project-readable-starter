@@ -12,7 +12,6 @@ function trim (str) {
 class PostCommentList extends Component {
   componentDidMount() {
     console.log('componentDidMount', this.props)
-    // this.props.fetchPosts(this.props.categoryPath)
   }
 
   render() {
@@ -24,21 +23,30 @@ class PostCommentList extends Component {
       && this.props.match.params 
       && this.props.match.params.category) ? this.props.match.params.post : null      
     console.log('PostCommentList-render', categoryPath, postId, this.props)
-    if (postId && this.props.post[postId]) {
-      const postInfo = this.props.post[postId]
+    if (postId 
+      && this.props.post
+      && this.props.post[categoryPath] 
+      && this.props.post[categoryPath].posts) {
+      const postInfo = this.props.post[categoryPath].posts.filter((post) => (
+        post.id == postId
+      ))[0]
       let commentsForPost = []
-      console.log('PostCommentList-posts')
+      if (postInfo.comments) {
+        commentsForPost = postInfo.comments
+      }
+      console.log('PostCommentList-posts', postInfo)
       return (
         <div>
           <h1>{postInfo.title}</h1>
           <ul className='post-comment-list'>
-        {
-          commentsForPost.map((item) => (
-          <li key={item.label}>
-            <h3>{trim(item.title)}</h3>
-            <div>{item.voteScore}</div>
-          </li>
-          ))
+          {
+
+            commentsForPost.map((item) => (
+              <li key={item.id}>
+                <h3>{trim(item.body)}</h3>
+              </li>
+            ))
+
         }
         </ul>
         </div>

@@ -11,11 +11,13 @@ class Categories extends Component {
     categoryType: null,
   }
 
-  componentWillReceiveProps() {
-    console.log("Categories-componentWillUpdateProps", this.props)
-    const categoryType = (this.props.match 
-      && this.props.match.params 
-      && this.props.match.params.category) ? this.props.match.params.category : null    
+  componentWillReceiveProps(nextProps) {
+    console.log("Categories-componentWillReceiveProps", this.props)
+    const categoryType = (nextProps.match 
+      && nextProps.match.params 
+      && nextProps.match.params.category) ? nextProps.match.params.category : null   
+      
+    console.log("Category-Type", categoryType)
     this.setState({categoryType})
   }
 

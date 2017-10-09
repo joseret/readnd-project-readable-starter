@@ -61,12 +61,15 @@ function requestPosts(category) {
 }
 
 export const RECEIVE_POSTS= 'RECEIVE_POSTS'
-function receivePosts(category, json) {
-  console.log(RECEIVE_POSTS+ "-json", json)
+function receivePosts(dispatch, category, posts) {
+  console.log(RECEIVE_POSTS+ "-json", posts)
+  posts.map((post) => {
+    dispatch(fetchPostComments(category, post.id))
+  })
   return {
     type: RECEIVE_POSTS,
     category,
-    posts: json,
+    posts,
     receivedAt: Date.now()
   }
 }
@@ -89,7 +92,7 @@ export function fetchPosts(category) {
         error => console.log('An error occured.', error)
       )
       .then(json =>
-        dispatch(receivePosts(category, json))
+        dispatch(receivePosts(dispatch, category, json))
       )
   }
 }
@@ -105,24 +108,25 @@ function requestPostComments(postId) {
 }
 
 export const RECEIVE_POST_COMMENTS= 'RECEIVE_POST_COMMENTS'
-function receivePostComments(postId, json) {
+function receivePostComments(categoryId, postId, json) {
   console.log(RECEIVE_POST_COMMENTS+ "-json", json)
   return {
     type: RECEIVE_POST_COMMENTS,
+    categoryId,
     postId,
     comments: json,
     receivedAt: Date.now()
   }
 }
 
-export function fetchPostComments(postId) {
+export function fetchPostComments(categoryPath, postId) {
   // Thunk middleware knows how to handle functions.
   // It passes the dispatch method as an argument to the function,
   // thus making it able to dispatch actions itself.
   console.log('fetchPostComments')
   return  dispatch => {
     console.log('actions-fetchPostComments-pre-requestPostComments')
-    dispatch(requestPosts(postId))
+    dispatch(requestPosts(categoryPath, postId))
     console.log('actions-fetchPostComments-post-requestPostComments')
     return fetch(API_URL + `/posts/${postId}/comments`,
       {
@@ -133,7 +137,7 @@ export function fetchPostComments(postId) {
         error => console.log('An error occured.', error)
       )
       .then(json =>
-        dispatch(receivePostComments(postId, json))
+        dispatch(receivePostComments(categoryPath, postId, json))
       )
   }
 }
