@@ -50,10 +50,11 @@ class Categories extends Component {
 }
 
 
-function mapStateToProps({ category, post } ) {
+function mapStateToProps({ category, post, comment } ) {
   return {
     categories: category.categoriesList,
     post,
+    comment,
   }
 }
 

@@ -1,4 +1,5 @@
 
+import uuidv4 from 'uuid/v4'
 const API_URL = 'http://localhost:3001'
 
 
@@ -138,6 +139,51 @@ export function fetchPostComments(categoryPath, postId) {
       )
       .then(json =>
         dispatch(receivePostComments(categoryPath, postId, json))
+      )
+  }
+}
+
+
+export function addComment(postId, commentText) {
+  // Thunk middleware knows how to handle functions.
+  // It passes the dispatch method as an argument to the function,
+  // thus making it able to dispatch actions itself.
+  console.log('postAddComment')
+  return  dispatch => {
+    console.log('actions-addComment-pre-requestPostComments')
+    //dispatch(addComment(postId, commentText))
+    console.log('actions-addComment-post-requestPostComments')
+    /*
+      `POST /comments` 
+      | Add a comment to a post. 
+      | **id** - Any unique ID. As with posts, UUID is probably the best here. <br> 
+        **timestamp** - [Timestamp] Get this however you want. <br> 
+        **body** - [String] <br> 
+        **author** - [String] <br> 
+        **parentId** - Should match a post id in the database. 
+      |
+    */
+    return fetch(API_URL + `/comments`,
+      {
+        headers: { 'Authorization': 'whatever-you-want' },
+        method: 'POST',
+        body: {
+          id: uuidv4(),
+          timestamp: Date.now(),
+          body: commentText,
+          author: 'joseret',
+          parentId: postId
+
+        }
+      
+      })
+      .then(
+        response => response.json(),
+        error => console.log('An error occured.', error)
+      )
+      .then(json =>
+        console.log('Comment Addded', json)
+       // dispatch(receivePostComments(categoryPath, postId, json))
       )
   }
 }

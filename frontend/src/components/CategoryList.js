@@ -40,10 +40,11 @@ class CategoryList extends Component {
   }
 }
 
-function mapStateToProps({ category, post } ) {
+function mapStateToProps({ category, post, comment } ) {
   return {
     category,
     post,
+    comment,
   }
 }
 

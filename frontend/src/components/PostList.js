@@ -24,52 +24,71 @@ class PostList extends Component {
   // }
 
   render() {
-    const { category, post, categoryPath } = this.props
+    const { category, post, categoryPath, comment } = this.props
     console.log('CategoryList-render', this.props)
-    let postsForCategory = []
-    if (post[categoryPath] && post[categoryPath].posts) {
-      postsForCategory = post[categoryPath].posts.filter((post) => !post.deleted)
-
+    let postsForCategory=[]
+    if (post && post[categoryPath] && post[categoryPath].postsMap) {
+      postsForCategory = Object.keys(post[categoryPath].postsMap).map(function(key) {
+        if (comment[key] && comment[key].comments) {
+          post[categoryPath].postsMap[key].comments = comment[key].comments
+        }
+        return post[categoryPath].postsMap[key] 
+      })
     }
+    postsForCategory.sort(function(x, y) {return x.title > y.title});
+
+    // if (post[categoryPath] && post[categoryPath].posts) {
+    //   postsForCategory = post[categoryPath].posts.filter((post) => !post.deleted)
+
+    // }
     console.log('PostList-posts', categoryPath, postsForCategory)
     return (
-      <div className='post-list-info'>
-        <ul>
-        <li key='post.header' className='post-grid'>
-           <ul>
-            <li className='post-entry-column'>Title</li>
-            <li className='post-entry-column'>Author</li>
-            <li className='post-entry-column'># Cmts</li>            
-            <li className='post-entry-column'>Score</li>
-            <li className='post-entry-column'>Vote</li>
-          </ul>
-        </li>          
+      <div className='container'>
+        <div className="row">
+            <div className='col-md-4'>Title</div>
+            <div className='col-md-1'>Author</div>
+            <div className='col-md-1'># Cmts</div>            
+            <div className='col-md-1'>Score</div>
+            <div className='col-md-1'>Vote</div>
+        </div>       
+    
         {
+          
           postsForCategory.map((item) => (
-          <li key={item.id} className='post-grid' >
-            <ul>
-            <li className='post-entry-column'><Link to={`/category/${categoryPath}/post/${item.id}`}>{trim(item.title)}</Link></li>
-            <li className='post-entry-column'>{item.author}</li>
-            <li className='post-entry-column'>{item.comments?item.comments.length:0}</li>
-            <li className='post-entry-column'>{item.voteScore}</li>     
-            <li className='post-entry-column'>
-              <button>Up</button>
-              <button>Down</button>
-            </li>  
-            </ul>  
-          </li>
+            <div className='row'>
+              <div className='col-md-1'><Link to={`/category/${categoryPath}/post/${item.id}`}> Detail</Link></div>
+              <div className='col-md-4'>{item.title}</div>
+              <div className='col-md-1'>{item.author}</div>
+              <div className='col-md-1'>{item.comments?item.comments.length:0}</div>
+              <div className='col-md-1'>{item.voteScore}</div>     
+              <div className='col-md-1'>{item.id}</div>  
+              <div className='col-md-2'>
+                <div class="btn-group">
+                  <button>Up</button>
+                  <button>Down</button>
+                </div>
+              </div>  
+              {/* <div className='col-md-12'>
+                <div className='row'>
+              <PostCommentList postId={item.id} />
+               </div>
+            </div> */}
+            </div>
+
+          
           ))
         }
-        </ul>
+  
       </div>
-    ) 
+    )
   }
 }
 
-function mapStateToProps({ category, post } ) {
+function mapStateToProps({ category, post, comment } ) {
   return {
     category,
     post,
+    comment
   }
 }
 

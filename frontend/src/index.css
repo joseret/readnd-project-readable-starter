@@ -12,7 +12,7 @@ li {
   list-style-type: none;
 }
 
-.category-types {
+/* .category-types {
   display: flex;
   justify-content: space-around;
   margin: 0;
@@ -43,4 +43,4 @@ li {
   display: flex;
   flex: 1 1;
   flex-direction: column;
-}
+} */

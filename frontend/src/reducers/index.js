@@ -53,31 +53,17 @@ function post(state = {}, action) {
       return state
     case RECEIVE_POSTS:
       console.log('reducer-post' + action.type, action)
+      const postsMap = {}
+      action.posts.map((post) => postsMap[post.id] = post )
       const nextState = {
         ...state,
         [action.category]: {
-          posts: action.posts
+          posts: action.posts,
+          postsMap
         }
       }
       console.log('nextState', action.type, nextState)
       return nextState    
-    case REQUEST_POST_COMMENTS:
-      return state
-    case RECEIVE_POST_COMMENTS:
-      console.log('reducer-post-comment-' + action.type, action, state)
-      const nextStateNewPosts = JSON.parse(JSON.stringify(state))
-
-      if (nextStateNewPosts[action.categoryId]) {
-        nextStateNewPosts[action.categoryId].posts.map((post) => {
-          console.log('reducer-post-comment-post-entry', post)          
-          if (post.id == action.postId) {
-            post['comments'] = action.comments
-            console.log('reducer-post-comment-post-entry-found', post)               
-          }
-        })
-      }
-      console.log('nextState', action.type, nextStateNewPosts)
-      return nextStateNewPosts      
     default:
       return state
   }
@@ -85,9 +71,33 @@ function post(state = {}, action) {
 
 function comment(state = {}, action) {
   switch(action.type) {
+    case REQUEST_POST_COMMENTS:
+    return state
+  case RECEIVE_POST_COMMENTS:
+    console.log('reducer-post-comment-' + action.type, action, state)
+    const nextStateNewComments = {
+      ...state,
+      [action.postId]: {
+        comments: action.comments
+      }
+    }
+    // const nextStateNewPosts = JSON.parse(JSON.stringify(state))
+
+    // if (nextStateNewPosts[action.categoryId]) {
+    //   nextStateNewPosts[action.categoryId].posts.map((post) => {
+    //     console.log('reducer-post-comment-post-entry', post)          
+    //     if (post.id == action.postId) {
+    //       post['comments'] = action.comments
+    //       console.log('reducer-post-comment-post-entry-found', post)               
+    //     }
+    //   })
+    // }
+    console.log('nextState', action.type, nextStateNewComments)
+    return nextStateNewComments 
     default:
       return state
   }
+
 }
 
 export default combineReducers({
