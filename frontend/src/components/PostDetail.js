@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import PostCommentList from './PostCommentList'
 import PostAddComment from './PostAddComment'
-import { fetchPostComments } from '../actions/actions'
+import { fetchPostComments, addPostVote  } from '../actions'
+
 
 function trim (str) {
   return str.length > 16
@@ -18,6 +19,10 @@ class PostDetail extends Component {
     postIdParam: null,
   }
 
+  doVote = (direction, categoryId, postId) => {
+    const { addPostVote } = this.props
+    addPostVote(categoryId, postId, direction)
+  }
 
   render() {
     const { category, post, comment } = this.props
@@ -44,25 +49,43 @@ class PostDetail extends Component {
 
       return (
         <div className='container'>
+          <div className="row">
+            <div className='col-md-4'>Title</div>
+            <div className='col-md-1'>Author</div>
+            <div className='col-md-1'># Cmts</div>            
+            <div className='col-md-1'>Score</div>
+          </div>   
+
           <div className='row'>
             <div className='col-md-4'>{item.title}</div>
             <div className='col-md-1'>{item.author}</div>
             <div className='col-md-1'>{item.comments?item.comments.length:0}</div>
-            <div className='col-md-1'>{item.voteScore}</div>     
-            <div className='col-md-1'>{item.id}</div>  
             <div className='col-md-2'>
-              <div class="btn-group">
-                <button>Up</button>
-                <button>Down</button>
+              <div className="btn-group">
+              <div className="vote circle">
+              <div className="increment up" onClick={() => this.doVote('upVote', categoryParam, item.id)}>></div>
+              <div className="increment down"onClick={() => this.doVote('downVote', categoryParam, item.id)}></div>
+              <div className="count">{item.voteScore}</div>
+            </div>
               </div>
-            </div>  
+            </div>
+            <div className="row">
+            <div className='col-md-12'>
+              {item.body}
+            </div>
+            </div>
+            <div className="row">
+            <div className='col-md-12'>
+            <PostAddComment postId={item.id} categoryId={categoryParam}/>
+            </div>
+            </div>
             <div className='col-md-12'>
               <div className='row'>
                 <PostCommentList postId={item.id} />
               </div>
           </div>
           </div>
-          <PostAddComment postId={item.id} />
+
         </div>
           
       )
@@ -82,6 +105,7 @@ function mapStateToProps({ category, post, comment } ) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    addPostVote: (categoryId, postId, direction) => dispatch(addPostVote(categoryId, postId, direction))
    }
 }
 

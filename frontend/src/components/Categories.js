@@ -1,14 +1,48 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { Route } from 'react-router-dom'
+import Modal from 'react-modal'
 import logo from '../logo.svg';
 import '../App.css';
 import CategoryList from './CategoryList'
+import CategoryAddPost from './CategoryAddPost'
 import { setupCategoryPathFilter } from '../actions/actions'
 class Categories extends Component {
 
   state = {
     categoryType: null,
+    addPostOpen: false,
+    modalCategoryType: null,
+    modalPostId: null,
+    sortBy: null,
+    sortDesc: false,
+  }
+
+
+  changeSort = ((field) => {
+    console.log('changing-sort', field)
+    if (this.state.sortBy == field) {
+      this.setState({sortDesc: !this.state.sortDesc})
+    } else {
+      this.setState({sortBy: field, sortDesc: false})
+    }
+  })
+
+  openPostModal = (modalCategoryType, modalPostId) => {
+    console.log('openPostModal', modalCategoryType, modalPostId)
+    this.setState({
+      addPostOpen: true,
+      modalCategoryType,
+      modalPostId
+    } )
+  }
+
+  closePostModal = () => {
+    this.setState(() => ({
+      addPostOpen: false,
+      modalCategoryType: null,
+      modalPostId: null
+    }))
   }
 
   componentWillReceiveProps(nextProps) {
@@ -23,7 +57,7 @@ class Categories extends Component {
 
   render() {
     const { categories } = this.props
-    const { categoryType } = this.state
+    const { categoryType, modalCategoryType, modalPostId, addPostOpen } = this.state
     console.log('render-props', this.props)
 
 
@@ -34,17 +68,35 @@ class Categories extends Component {
       category.path == categoryType
     )
     return (
+      <div>
        <div className='categories-info'>
           <ul className='category-info-types'>
             {
               categoriesView.map((categoryType) => (
                 <li key={categoryType.name} className='subheader'>
-                  <CategoryList categoryPath={categoryType.path} />
+                  <div className="category-entry-info">
+                    <h3 className='subheader'>{categoryType.name}</h3>
+                    <button onClick={() => this.openPostModal(categoryType.path)} >Add  ${categoryType.name} Post`</button>
+                    <CategoryList sortBy={this.state.sortBy} sortDesc={this.state.sortDesc} changeSort={this.changeSort}
+                      categoryPath={categoryType.path} openPostModal={this.openPostModal}/>
+                  </div>
                 </li>
               ))
             }
             </ul>          
         </div>
+        <Modal
+          className='modal'
+          overlayClassName='overlay'
+          contentLabel='Modal'
+          isOpen={addPostOpen}
+          onRequestClose={this.closePostModal}
+        >
+        <div>
+        { addPostOpen && <CategoryAddPost categoryId={modalCategoryType} postId={modalPostId} closePostModal={this.closePostModal} />}
+        </div>
+        </Modal>
+      </div>
     );
   }
 }

@@ -48,21 +48,37 @@ function category(state = initialCategoriesState, action) {
 }
 
 function post(state = {}, action) {
+  const funcNameLog = 'reduce-post:'
   switch(action.type) {
     case REQUEST_POSTS:
       return state
     case RECEIVE_POSTS:
-      console.log('reducer-post' + action.type, action)
-      const postsMap = {}
-      action.posts.map((post) => postsMap[post.id] = post )
+      console.log(funcNameLog + 'action.type' ,  action.type, {action, state})
+      var categoryPosts = []
+      var categoryPostsMap = {}
+      if (action.postId && action.category) {
+        categoryPostsMap = state[action.category].postsMap
+        categoryPostsMap[action.postId] = action.postInfo
+        categoryPosts = state[action.category].posts
+        const at = categoryPosts.findIndex((item, index) => (item.id == action.postId))
+        console.log(funcNameLog + 'findIndex' ,  {at, 'postId': action.postId})
+        if (at >= 0) {
+          categoryPosts[at] = action.postInfo
+        } else {
+          categoryPosts.push(action.postInfo)
+        }
+      } else {
+        action.postInfo.map((post) => categoryPostsMap[post.id] = post )
+        categoryPosts = action.postInfo
+      }
       const nextState = {
         ...state,
         [action.category]: {
-          posts: action.posts,
-          postsMap
+          posts: categoryPosts,
+          postsMap: categoryPostsMap
         }
       }
-      console.log('nextState', action.type, nextState)
+      console.log(funcNameLog + 'nextState', action.type, nextState)
       return nextState    
     default:
       return state

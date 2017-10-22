@@ -1,28 +1,34 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { addComment } from '../actions/actions'
+import { addEditComment } from '../actions'
 
 class PostAddComment extends Component {
   
+  state = {
+    isButtonDisabled: false,
+  }
 
   formAddComment = (e) => {
     e.preventDefault()
-    const { postId, addComment } = this.props
+    const { postId, categoryId, addEditComment } = this.props
     if (postId) {
       if (!this.input.value) {
         return
       }
-
+      this.setState( {isButtonDisabled: true})
       // this.setState(() => ({loadingFood: true}))
-
-      addComment(postId, this.input.value)
+      
+      addEditComment(categoryId, postId, null, this.input.value)
     }
   
   }
 
   render() {
-    const { post, comment, postId } = this.props
-
+    const { post, comment, postId, categoryId } = this.props
+    this.state.isButtonDisabled = false
+    if (this.input) {
+        this.input.value = ''
+    }
     return (
       <form>
         <input
@@ -33,7 +39,8 @@ class PostAddComment extends Component {
         />
       <button
         className='icon-btn'
-        onClick={this.formAddComment}>Add Comment</button>
+        onClick={this.formAddComment}
+        disabled={this.state.isButtonDisabled}>Add Comment</button>
       </form>
     )
     }
@@ -48,7 +55,7 @@ function mapStateToProps({ category, post, comment } ) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    addComment: (postId, commentText) => dispatch(addComment(postId, commentText))
+    addEditComment: (categoryId, postId, commentId, commentText) => dispatch(addEditComment(categoryId, postId, commentId, commentText))
   }
 }
 

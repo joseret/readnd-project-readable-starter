@@ -62,38 +62,86 @@ function requestPosts(category) {
 }
 
 export const RECEIVE_POSTS= 'RECEIVE_POSTS'
-function receivePosts(dispatch, category, posts) {
-  console.log(RECEIVE_POSTS+ "-json", posts)
-  posts.map((post) => {
-    dispatch(fetchPostComments(category, post.id))
-  })
+function receivePosts(dispatch, category, postId, postInfo) {
+  console.log(RECEIVE_POSTS+ "-json", postInfo)
+  if (postId) {
+    dispatch(fetchPostComments(category, postId))
+  } else {
+    postInfo.map((post) => {
+      dispatch(fetchPostComments(category, post.id))
+    })
+  }
   return {
     type: RECEIVE_POSTS,
     category,
-    posts,
+    postId,
+    postInfo,
     receivedAt: Date.now()
   }
 }
 
-export function fetchPosts(category) {
-  // Thunk middleware knows how to handle functions.
-  // It passes the dispatch method as an argument to the function,
-  // thus making it able to dispatch actions itself.
-  console.log('fetchPosts')
+export function fetchPosts(category, postId) {
+  const funcLogName = 'middleware-fetchPosts:'
+  console.log(funcLogName + 'entry', {category}, {postId})
   return  dispatch => {
-    console.log('actions-fetchPosts-pre-requestPosts')
-    dispatch(requestPosts(category))
-    console.log('actions-fetchPosts-post-requestPosts')
-    return fetch(API_URL + `/${category}/posts`,
+    const url = postId ? `/posts/${postId}` : `/${category}/posts`
+    console.log(funcLogName + 'before-fetch', {url})
+    return fetch(API_URL + url,
       {
         headers: { 'Authorization': 'whatever-you-want' }
       })
       .then(
         response => response.json(),
+        error => console.log(funcLogName + '<<ERROR>>', error)
+      )
+      .then(json => {
+          console.log(funcLogName + 'success', {category,postId,json})
+          return dispatch(receivePosts(dispatch, category, postId, json))
+      })
+  }
+}
+
+export function addEditPost(category, postInfo, postId, isDelete) {
+  const funcLogName = 'middleware-addEditPost:'
+  console.log(funcLogName + 'Entry', {category, postInfo, postId, isDelete})
+
+  return  dispatch => {
+    const url = postId ? `/posts/${postId}` : '/posts'
+
+    var parameterMethod = 'post'
+    const parameterMap = {
+      timestamp: Date.now(),
+      category,
+      title: postInfo.title,
+      body: postInfo.body,
+      author: 'joseret',
+      parentId: postId
+    }
+    if (postId) {
+      parameterMethod = isDelete ? 'delete' : 'put'
+    } else {
+      parameterMap['id'] = uuidv4()
+
+    }
+    console.log(funcLogName + 'before-fetch', {url, parameterMethod, parameterMap})
+    return fetch(API_URL + url,
+      {
+        method: parameterMethod,
+        headers: { 
+          'Authorization': 'whatever-you-want',
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(parameterMap)
+      })
+      .then(
+        response => response.json(),
         error => console.log('An error occured.', error)
       )
-      .then(json =>
-        dispatch(receivePosts(dispatch, category, json))
+      .then(json => {
+        console.log(funcLogName + 'success', {category, json})
+        return dispatch(fetchPosts(category, isDelete ? null : postId))
+        }
       )
   }
 }
@@ -109,26 +157,24 @@ function requestPostComments(postId) {
 }
 
 export const RECEIVE_POST_COMMENTS= 'RECEIVE_POST_COMMENTS'
-function receivePostComments(categoryId, postId, json) {
-  console.log(RECEIVE_POST_COMMENTS+ "-json", json)
+function receivePostComments(categoryId, postId, comments) {
+  const funcLogName = 'middleware-generate-receivePostComments'
+  console.log(funcLogName + RECEIVE_POST_COMMENTS, {categoryId, postId, comments})
   return {
     type: RECEIVE_POST_COMMENTS,
     categoryId,
     postId,
-    comments: json,
+    comments: comments,
     receivedAt: Date.now()
   }
 }
 
 export function fetchPostComments(categoryPath, postId) {
-  // Thunk middleware knows how to handle functions.
-  // It passes the dispatch method as an argument to the function,
-  // thus making it able to dispatch actions itself.
-  console.log('fetchPostComments')
+  const funcLogName = 'middleware-fetchPostComments:'
+  console.log(funcLogName + 'Entry', {categoryPath, postId})
   return  dispatch => {
-    console.log('actions-fetchPostComments-pre-requestPostComments')
-    dispatch(requestPosts(categoryPath, postId))
-    console.log('actions-fetchPostComments-post-requestPostComments')
+
+    console.log(funcLogName + 'before-fetch')
     return fetch(API_URL + `/posts/${postId}/comments`,
       {
         headers: { 'Authorization': 'whatever-you-want' }
@@ -140,50 +186,5 @@ export function fetchPostComments(categoryPath, postId) {
       .then(json =>
         dispatch(receivePostComments(categoryPath, postId, json))
       )
-  }
-}
-
-
-export function addComment(postId, commentText) {
-  // Thunk middleware knows how to handle functions.
-  // It passes the dispatch method as an argument to the function,
-  // thus making it able to dispatch actions itself.
-  console.log('postAddComment')
-  return  dispatch => {
-    console.log('actions-addComment-pre-requestPostComments')
-    //dispatch(addComment(postId, commentText))
-    console.log('actions-addComment-post-requestPostComments')
-    /*
-      `POST /comments` 
-      | Add a comment to a post. 
-      | **id** - Any unique ID. As with posts, UUID is probably the best here. <br> 
-        **timestamp** - [Timestamp] Get this however you want. <br> 
-        **body** - [String] <br> 
-        **author** - [String] <br> 
-        **parentId** - Should match a post id in the database. 
-      |
-    */
-    return fetch(API_URL + `/comments`,
-      {
-        headers: { 'Authorization': 'whatever-you-want' },
-        method: 'POST',
-        body: {
-          id: uuidv4(),
-          timestamp: Date.now(),
-          body: commentText,
-          author: 'joseret',
-          parentId: postId
-
-        }
-      
-      })
-      .then(
-        response => response.json(),
-        error => console.log('An error occured.', error)
-      )
-      .then(json =>
-        console.log('Comment Addded', json)
-       // dispatch(receivePostComments(categoryPath, postId, json))
-      )
-  }
+    }
 }

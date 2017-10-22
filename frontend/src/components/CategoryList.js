@@ -30,11 +30,9 @@ class CategoryList extends Component {
     console.log('CategoryList-render', this.props)
     // this.props.fetchPosts(this.props.categoryPath)
     return (
-      <div className="category-entry-info">
-      <h3 className='subheader'>{category.categoriesMap[categoryPath].name}</h3>
+ 
       <div>
-        <PostList categoryPath={categoryPath} />
-      </div>
+        <PostList sortBy={this.props.sortBy} sortDesc={this.props.sortDesc} changeSort={this.props.changeSort }categoryPath={categoryPath}  openPostModal={this.props.openPostModal}/>
       </div>
     )
   }
