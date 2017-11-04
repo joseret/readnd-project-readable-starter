@@ -31,4 +31,14 @@ Information about the API server and how to use it can be found in its [README f
   - cd frontend
   - npm install
   - npm start
+
+
+## Instructions
+
+Sort - click on Title on Post Listing (in the categories)
+To update comment, click on the comment to get a input capable field
+TO update the vote score (use the green/red around the number)
+The rest should be clear from the UI.
+
+Sorry it is a little messy but there was so little guidance that is was lots of hacking and googling :)
   

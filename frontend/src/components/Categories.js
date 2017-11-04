@@ -76,7 +76,7 @@ class Categories extends Component {
                 <li key={categoryType.name} className='subheader'>
                   <div className="category-entry-info">
                     <h3 className='subheader'>{categoryType.name}</h3>
-                    <button onClick={() => this.openPostModal(categoryType.path)} >Add  ${categoryType.name} Post`</button>
+                    <button onClick={() => this.openPostModal(categoryType.path)} >Add  {categoryType.name} Post`</button>
                     <CategoryList sortBy={this.state.sortBy} sortDesc={this.state.sortDesc} changeSort={this.changeSort}
                       categoryPath={categoryType.path} openPostModal={this.openPostModal}/>
                   </div>

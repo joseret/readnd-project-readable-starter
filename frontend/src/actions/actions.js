@@ -28,10 +28,11 @@ export function fetchCategories() {
   return  dispatch => {
     console.log('actions-fetchCategories-pre-requestCategories')
     dispatch(requestCategories())
-    console.log('actions-fetchCategories-post-requestCategories')
+    console.log('actions-fetchCategories-post-requestCategories', API_URL + '/categories')
     return fetch(API_URL + '/categories',
       {
-        headers: { 'Authorization': 'whatever-you-want' }
+        headers: { 'Authorization': 'whatever-you-want' },
+        credentials: 'includ',
       })
       .then(
         response => response.json(),
