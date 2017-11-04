@@ -1,17 +1,31 @@
 import uuidv4 from 'uuid/v4'
+
+import { 
+  REQUEST_CATEGORIES, 
+  RECEIVE_CATEGORIES,
+  REQUEST_POSTS,
+  RECEIVE_POSTS,
+  REQUEST_POST_COMMENTS,
+  RECEIVE_POST_COMMENTS,  
+  SETUP_CATEGORY,
+  REQUEST_ADD_COMMENT,
+  RECEIVE_ADD_COMMENT,
+  REQUEST_ADD_COMMENT_VOTE,
+  RECEIVE_ADD_POST_VOTE,
+  REQUEST_ADD_POST_VOTE
+} from '../actions/types'
+
 import { fetchPosts, fetchPostComments } from './actions'
 
 const API_URL = 'http://localhost:3001'
 
 
-export const REQUEST_ADD_COMMENT = 'REQUEST_ADD_COMMENT'
 function requestAddComment() {
   return {
     type: REQUEST_ADD_COMMENT,
   }
 }
 
-export const RECEIVE_ADD_COMMENT= 'REQUEST_ADD_COMMENT'
 function receiveAddComment(postId, commentText, json) {
   console.log(RECEIVE_ADD_COMMENT+ "-json", json)
   return {
@@ -65,8 +79,6 @@ export function addEditComment(categoryId, postId, commentId, commentText, isDel
   }
 }
 
-
-export const REQUEST_ADD_COMMENT_VOTE = 'REQUEST_ADD_COMMENT_VOTE'
 function requestAddCommentVote(postId, direction) {
   return {
     type: REQUEST_ADD_COMMENT_VOTE,
@@ -134,14 +146,12 @@ export function addCommentVote(categoryId, postId, commentId, direction) {
 }
 
 
-export const REQUEST_ADD_POST_VOTE = 'RECEIVE_ADD_POST_VOTE'
 function requestAddPostVote(postId, direction) {
   return {
     type: REQUEST_ADD_POST_VOTE,
   }
 }
 
-export const RECEIVE_ADD_POST_VOTE= 'RECEIVE_ADD_POST_VOTE'
 function receiveAddPostVote(postId, direction, json) {
   console.log(RECEIVE_ADD_POST_VOTE+ "-json", json)
   return {
