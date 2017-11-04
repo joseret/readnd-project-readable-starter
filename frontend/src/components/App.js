@@ -43,17 +43,4 @@ class App extends Component {
 }
 
 
-// function mapStateToProps({ category, post } ) {
-//   return {
-//     categories: category.categoriesList,
-//     post,
-//   }
-// }
-
-// function mapDispatchToProps(dispatch) {
-//   return {
-//   }
-// }
-
 export default App
-// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App))

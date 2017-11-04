@@ -62,10 +62,14 @@ class PostComment extends Component {
 
           <div className='col-md-2'>
           <button
-          className='icon-btn'
-          onClick={() => addEditComment(categoryId, postId, commentInfo.id, commentInfo.body, true)}
+            className='icon-btn'
+            onClick={() => addEditComment(categoryId, postId, commentInfo.id, commentInfo.body, true)}
           >Delete Comment</button>
+          <button
+            className='icon-btn'
+            onClick={() =>this.setState({commentEntryEnabled: true})}>Edit Comment</button>
           </div>
+
           <div className='col-sm-2'>-</div>
           <div className='col-12 col-md-auto' onClick={() => this.setState({commentEntryEnabled: true})}> {commentInfo.body? commentInfo.body : ''} 
           </div>

@@ -7,7 +7,7 @@ import {
   RECEIVE_POSTS,
   REQUEST_POST_COMMENTS,
   RECEIVE_POST_COMMENTS,  
-} from '../actions/actions'
+} from '../actions/types'
 
 const categoriesList = [
 ]

@@ -8,18 +8,6 @@ This repository includes the code for the backend API Server that you'll use to 
 
 To get started developing right away:
 
-* Install and start the API server
-    - `cd api-server`
-    - `npm install`
-    - `node server`
-* In another terminal window, use Create React App to scaffold out the front-end
-    - `create-react-app frontend`
-    - `cd frontend`
-    - `npm start`
-
-## API Server
-
-Information about the API server and how to use it can be found in its [README file](api-server/README.md).
 ## Running the Project
 
 * One Terminal, Run API Server
@@ -35,8 +23,9 @@ Information about the API server and how to use it can be found in its [README f
 
 ## Instructions
 
-Sort - click on Title on Post Listing (in the categories)
-To update comment, click on the comment to get a input capable field
+Sort - see the click to sort on the columns that get do it
+To update comment, click on the "edit comment" to get a input capable field
+To delete comment, click on the "delete comment"
 TO update the vote score (use the green/red around the number)
 The rest should be clear from the UI.
 

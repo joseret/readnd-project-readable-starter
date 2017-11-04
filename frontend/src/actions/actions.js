@@ -1,16 +1,30 @@
 
 import uuidv4 from 'uuid/v4'
-const API_URL = 'http://localhost:3001'
+
+import { 
+  REQUEST_CATEGORIES, 
+  RECEIVE_CATEGORIES,
+  REQUEST_POSTS,
+  RECEIVE_POSTS,
+  REQUEST_POST_COMMENTS,
+  RECEIVE_POST_COMMENTS,  
+  SETUP_CATEGORY
+} from '../actions/types'
 
 
-export const REQUEST_CATEGORIES = 'REQUEST_CATEGORIES'
+const API_URL = 'http://localhost:3001' || `${process.env.REACT_APP_BACKEND}`
+const INCLUDE_LOCALHOST = (typeof `${process.env.REACT_APP_BACKEND}` === 'undefined') 
+  ? 'include' 
+  : true
+
+
+
 function requestCategories() {
   return {
     type: REQUEST_CATEGORIES,
   }
 }
 
-export const RECEIVE_CATEGORIES= 'RECEIVE_CATEGORIES'
 function receiveCategories(json) {
   console.log(RECEIVE_CATEGORIES+ "-json", json)
   return {
@@ -24,7 +38,7 @@ export function fetchCategories() {
   // Thunk middleware knows how to handle functions.
   // It passes the dispatch method as an argument to the function,
   // thus making it able to dispatch actions itself.
-  console.log('fetchCategories')
+  console.log('fetchCategories', INCLUDE_LOCALHOST)
   return  dispatch => {
     console.log('actions-fetchCategories-pre-requestCategories')
     dispatch(requestCategories())
@@ -32,7 +46,7 @@ export function fetchCategories() {
     return fetch(API_URL + '/categories',
       {
         headers: { 'Authorization': 'whatever-you-want' },
-        credentials: 'includ',
+        credentials: INCLUDE_LOCALHOST,
       })
       .then(
         response => response.json(),
@@ -44,7 +58,7 @@ export function fetchCategories() {
   }
 }
 
-export const SETUP_CATEGORY= 'SETUP_CATEGORY'
+
 export function setupCategoryPathFilter(category) {
   console.log(SETUP_CATEGORY+ "-category", category)
   return {
@@ -54,7 +68,6 @@ export function setupCategoryPathFilter(category) {
   }
 }
 
-export const REQUEST_POSTS = 'REQUEST_POSTS'
 function requestPosts(category) {
   return {
     type: REQUEST_POSTS,
@@ -62,7 +75,7 @@ function requestPosts(category) {
   }
 }
 
-export const RECEIVE_POSTS= 'RECEIVE_POSTS'
+
 function receivePosts(dispatch, category, postId, postInfo) {
   console.log(RECEIVE_POSTS+ "-json", postInfo)
   if (postId) {
@@ -149,7 +162,6 @@ export function addEditPost(category, postInfo, postId, isDelete) {
 
 
 
-export const REQUEST_POST_COMMENTS = 'REQUEST_POST_COMMENTS'
 function requestPostComments(postId) {
   return {
     type: REQUEST_POST_COMMENTS,
@@ -157,7 +169,6 @@ function requestPostComments(postId) {
   }
 }
 
-export const RECEIVE_POST_COMMENTS= 'RECEIVE_POST_COMMENTS'
 function receivePostComments(categoryId, postId, comments) {
   const funcLogName = 'middleware-generate-receivePostComments'
   console.log(funcLogName + RECEIVE_POST_COMMENTS, {categoryId, postId, comments})

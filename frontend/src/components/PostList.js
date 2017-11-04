@@ -38,10 +38,23 @@ class PostList extends Component {
       switch(this.props.sortBy) {
         case 'title':
         case 'voteScore':
+
           if (x[this.props.sortBy] == y[this.props.sortBy]) {
             return 0
           }
           val = x[this.props.sortBy] < y[this.props.sortBy] ? 1 : -1
+          break;
+        case 'count':
+          if (x.comments && y.comments) {
+            val = (x.comments.length < y.comments.length) ? 1 : -1
+          } else {
+            if (x.comments) {
+              val = 1
+            } else {
+              val = -1
+            }
+          }  
+         
           break;
         default:
           val = 0
@@ -59,10 +72,10 @@ class PostList extends Component {
       <div className='container'>
         <div className="row">
             <div className='col-md-2'>Action</div>
-            <div className='col-md-4' onClick={() => this.props.changeSort('title')}>Title</div>
+            <div className='col-md-4' onClick={() => this.props.changeSort('title')}>Title (click to sort)</div>
             <div className='col-md-1'>Author</div>
-            <div className='col-md-1' onClick={() => this.props.changeSort('count')}># Cmts</div>            
-            <div className='col-md-1' onClick={() => this.props.changeSort('voteScore')}>Score</div>
+            <div className='col-md-1' onClick={() => this.props.changeSort('count')}># Cmts (click to sort)</div>            
+            <div className='col-md-1' onClick={() => this.props.changeSort('voteScore')}>Score (click to sort)</div>
         </div>       
     
         {
