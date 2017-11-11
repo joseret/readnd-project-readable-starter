@@ -10,3 +10,11 @@ export const RECEIVE_ADD_COMMENT= 'REQUEST_ADD_COMMENT'
 export const REQUEST_ADD_COMMENT_VOTE = 'REQUEST_ADD_COMMENT_VOTE'
 export const REQUEST_ADD_POST_VOTE = 'RECEIVE_ADD_POST_VOTE'
 export const RECEIVE_ADD_POST_VOTE= 'RECEIVE_ADD_POST_VOTE'
+export const API_URL = process.env.REACT_APP_BACKEND ||  'http://localhost:3001' 
+export const INCLUDE_LOCALHOST = process.env.REACT_APP_BACKEND
+  ? 'include' 
+  : 'false'
+
+console.log('API_URL', API_URL)
+console.log('INCLUDE_LOCALHOST', INCLUDE_LOCALHOST)
+console.log('Check Backend', (typeof `${process.env.REACT_APP_BACKEND}`))

@@ -12,13 +12,12 @@ import {
   RECEIVE_ADD_COMMENT,
   REQUEST_ADD_COMMENT_VOTE,
   RECEIVE_ADD_POST_VOTE,
-  REQUEST_ADD_POST_VOTE
-} from '../actions/types'
+  REQUEST_ADD_POST_VOTE,
+  API_URL,
+  INCLUDE_LOCALHOST,
+} from './types'
 
 import { fetchPosts, fetchPostComments } from './actions'
-
-const API_URL = 'http://localhost:3001'
-
 
 function requestAddComment() {
   return {
@@ -65,6 +64,7 @@ export function addEditComment(categoryId, postId, commentId, commentText, isDel
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
+        credentials: INCLUDE_LOCALHOST,    
         body: JSON.stringify(parameterMap)
       })
       .then(
@@ -126,6 +126,7 @@ export function addCommentVote(categoryId, postId, commentId, direction) {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
+        credentials: INCLUDE_LOCALHOST,
         body: JSON.stringify(
           { 
             option: direction
@@ -177,6 +178,7 @@ export function addPostVote(categoryId, postId, direction) {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
+        credentials: INCLUDE_LOCALHOST,
         body: JSON.stringify(
           { 
             option: direction

@@ -1,4 +1,3 @@
-
 import uuidv4 from 'uuid/v4'
 
 import { 
@@ -8,14 +7,13 @@ import {
   RECEIVE_POSTS,
   REQUEST_POST_COMMENTS,
   RECEIVE_POST_COMMENTS,  
-  SETUP_CATEGORY
-} from '../actions/types'
+  SETUP_CATEGORY,
+  INCLUDE_LOCALHOST,
+  API_URL
+} from './types'
 
 
-const API_URL = 'http://localhost:3001' || `${process.env.REACT_APP_BACKEND}`
-const INCLUDE_LOCALHOST = (typeof `${process.env.REACT_APP_BACKEND}` === 'undefined') 
-  ? 'include' 
-  : true
+
 
 
 
@@ -40,13 +38,13 @@ export function fetchCategories() {
   // thus making it able to dispatch actions itself.
   console.log('fetchCategories', INCLUDE_LOCALHOST)
   return  dispatch => {
-    console.log('actions-fetchCategories-pre-requestCategories')
+    console.log('actions-fetchCategories-pre-requestCategories', API_URL)
     dispatch(requestCategories())
     console.log('actions-fetchCategories-post-requestCategories', API_URL + '/categories')
     return fetch(API_URL + '/categories',
       {
         headers: { 'Authorization': 'whatever-you-want' },
-        credentials: INCLUDE_LOCALHOST,
+       credentials: INCLUDE_LOCALHOST
       })
       .then(
         response => response.json(),
@@ -102,7 +100,8 @@ export function fetchPosts(category, postId) {
     console.log(funcLogName + 'before-fetch', {url})
     return fetch(API_URL + url,
       {
-        headers: { 'Authorization': 'whatever-you-want' }
+        headers: { 'Authorization': 'whatever-you-want' },
+        credentials: INCLUDE_LOCALHOST,
       })
       .then(
         response => response.json(),
@@ -146,10 +145,11 @@ export function addEditPost(category, postInfo, postId, isDelete) {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
+        credentials: INCLUDE_LOCALHOST,
         body: JSON.stringify(parameterMap)
       })
       .then(
-        response => response.json(),
+        response => parameterMethod != 'delete' ? response.json() : {},
         error => console.log('An error occured.', error)
       )
       .then(json => {
@@ -189,7 +189,8 @@ export function fetchPostComments(categoryPath, postId) {
     console.log(funcLogName + 'before-fetch')
     return fetch(API_URL + `/posts/${postId}/comments`,
       {
-        headers: { 'Authorization': 'whatever-you-want' }
+        headers: { 'Authorization': 'whatever-you-want' },        
+        credentials: INCLUDE_LOCALHOST,
       })
       .then(
         response => response.json(),
