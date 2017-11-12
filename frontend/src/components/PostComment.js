@@ -70,7 +70,7 @@ class PostComment extends Component {
             onClick={() =>this.setState({commentEntryEnabled: true})}>Edit Comment</button>
           </div>
 
-          <div className='col-sm-2'>-</div>
+          <div className='col-sm-2'>{commentInfo.author}-</div>
           <div className='col-12 col-md-auto' onClick={() => this.setState({commentEntryEnabled: true})}> {commentInfo.body? commentInfo.body : ''} 
           </div>
           </div>

@@ -22,6 +22,13 @@ class PostCommentList extends Component {
       
         return (
           <div className='comment-in-list'>
+            <div className='row'>
+              <div className='col col-xs-1'>Score</div>
+              <div className='col-md-2'>Action</div>
+              <div className='col-sm-2'>Author</div>
+              <div className='col-12  col-md-auto'>Comment</div>
+
+            </div>
           {
             comment[postId].comments.map((item) => (
               <PostComment commentInfo={item} postId={postId} categoryId={categoryId} />

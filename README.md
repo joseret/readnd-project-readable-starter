@@ -31,3 +31,8 @@ The rest should be clear from the UI.
 
 Sorry it is a little messy but there was so little guidance that is was lots of hacking and googling :)
   
+
+# V3
+
+ - Fixed author in comments and add/edit
+ - Fixed 404 (if we ust category/:category would be nicer way but got the message)

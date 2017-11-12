@@ -5,7 +5,7 @@ import logo from '../logo.svg';
 import '../App.css';
 import Categories from './Categories'
 import PostDetail from './PostDetail'
-
+import My404 from './My404'
 class App extends Component {
 
 
@@ -35,8 +35,10 @@ class App extends Component {
           }
           </ul>
         <Route exact path="/" component={Categories} />
-         <Route exact path="/:category" component={Categories} />
-        <Route exact path="/category/:category/post/:post" component={PostDetail} />        
+        <Route exact path="/oops/404" component={My404} />
+        <Route exact path="/:category" component={Categories} />
+        <Route exact path="/category/:category/post/:post" component={PostDetail} />  
+             
       </div>
     );
   }

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
+import Modal from 'react-modal'
 import PostCommentList from './PostCommentList'
 import PostAddComment from './PostAddComment'
-import { fetchPostComments, addPostVote  } from '../actions'
-
+import { fetchPostComments, addPostVote, addEditPost  } from '../actions'
+import CategoryAddPost from './CategoryAddPost'
 
 function trim (str) {
   return str.length > 16
@@ -17,6 +18,9 @@ class PostDetail extends Component {
   state = {
     categoryParam: null,
     postIdParam: null,
+    addPostOpen: false,
+    modalCategoryType: null,
+    modalPostId: null,
   }
 
   doVote = (direction, categoryId, postId) => {
@@ -24,9 +28,26 @@ class PostDetail extends Component {
     addPostVote(categoryId, postId, direction)
   }
 
-  render() {
-    const { category, post, comment } = this.props
+  openPostModal = (modalCategoryType, modalPostId) => {
+    console.log('openPostModal', modalCategoryType, modalPostId)
+    this.setState({
+      addPostOpen: true,
+      modalCategoryType,
+      modalPostId
+    } )
+  }
 
+  closePostModal = () => {
+    this.setState(() => ({
+      addPostOpen: false,
+      modalCategoryType: null,
+      modalPostId: null
+    }))
+  }
+
+  render() {
+    const { category, post, comment, addEditPost } = this.props
+    const { categoryType, modalCategoryType, modalPostId, addPostOpen } = this.state
     console.log("PostDetail-props", this.props)
     const categoryParam = (this.props.match 
       && this.props.match.params 
@@ -39,7 +60,7 @@ class PostDetail extends Component {
     if (postIdParam 
       && categoryParam && category.categoriesMap[categoryParam] 
       && post && post[categoryParam] 
-      && post[categoryParam].postsMap) {
+      && post[categoryParam].postsMap && post[categoryParam].postsMap[postIdParam]) {
       const item = post[categoryParam].postsMap[postIdParam]
       if (comment[postIdParam] && comment[postIdParam].comments) {
           post[categoryParam].postsMap[postIdParam].comments = comment[postIdParam].comments
@@ -66,10 +87,17 @@ class PostDetail extends Component {
               <div className="increment up" onClick={() => this.doVote('upVote', categoryParam, item.id)}>></div>
               <div className="increment down"onClick={() => this.doVote('downVote', categoryParam, item.id)}></div>
               <div className="count">{item.voteScore}</div>
+            </div>  
             </div>
+            </div>
+              <div className='col-md-2'>
+                <div class="btn-group">
+                  <button onClick={() => this.openPostModal(categoryParam, item.id)} >Edit Post</button>
+                  <button onClick={() => addEditPost(categoryParam, item, item.id, true)} >Delete</button>
+                </div>
               </div>
             </div>
-            <div className="row">
+              <div className="row">
             <div className='col-md-12'>
               {item.body}
             </div>
@@ -84,13 +112,24 @@ class PostDetail extends Component {
                 <PostCommentList postId={item.id} />
               </div>
           </div>
-          </div>
-
+          <Modal
+          className='modal'
+          overlayClassName='overlay'
+          contentLabel='Modal'
+          isOpen={addPostOpen}
+          onRequestClose={this.closePostModal}
+        >
+        <div>
+        { addPostOpen && <CategoryAddPost categoryId={modalCategoryType} postId={modalPostId} closePostModal={this.closePostModal} />}
+        </div>
+        </Modal>
         </div>
           
       )
     }
-    return null
+    return (
+      <Redirect to="/oops/404" />
+    )
   }
 }
 
@@ -105,7 +144,9 @@ function mapStateToProps({ category, post, comment } ) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    addPostVote: (categoryId, postId, direction) => dispatch(addPostVote(categoryId, postId, direction))
+    addPostVote: (categoryId, postId, direction) => dispatch(addPostVote(categoryId, postId, direction)),
+    addEditPost: (categoryId, postInfo, postId, isDelete) => dispatch(addEditPost(categoryId, postInfo, postId, isDelete))  
+    
    }
 }
 
